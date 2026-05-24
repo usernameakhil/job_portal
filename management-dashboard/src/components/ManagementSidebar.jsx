@@ -1,7 +1,10 @@
+// management-dashboard/src/components/ManagementSidebar.jsx
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom'; // Integrated standard routing hooks
 
-export default function ManagementSidebar({ children, onNavigate }) {
-  const path = window.location.pathname;
+export default function ManagementSidebar({ children }) {
+  const location = useLocation(); // Safely tracks the active path within the router provider context
+  const path = location.pathname;
 
   const menu = [
     { name: 'State Overview Dashboard', path: '/dashboard' },
@@ -10,7 +13,7 @@ export default function ManagementSidebar({ children, onNavigate }) {
 
   const triggerLogoutSequence = () => {
     localStorage.clear();
-    window.location.href = '/login';
+    window.location.href = '/login'; // Hard refresh resets systemic permission schemas cleanly
   };
 
   return (
@@ -31,10 +34,13 @@ export default function ManagementSidebar({ children, onNavigate }) {
           
           <nav className="space-y-1">
             {menu.map((m, idx) => {
+              // Validates standard targets and parametric nested sub-routes without failing
               const active = path === m.path || (m.path === '/vacancies' && path.startsWith('/vacancies/'));
               return (
-                <button
-                  key={idx} onClick={() => onNavigate(m.path)}
+                /* Swapped out <button> for <Link> to fix the missing onNavigate function error completely */
+                <Link
+                  key={idx} 
+                  to={m.path}
                   className={`w-full flex items-center px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
                     active 
                       ? 'bg-emerald-600 text-white shadow-md font-black border-l-4 border-emerald-600 pl-3' 
@@ -42,7 +48,7 @@ export default function ManagementSidebar({ children, onNavigate }) {
                   }`}
                 >
                   {m.name}
-                </button>
+                </Link>
               );
             })}
           </nav>
