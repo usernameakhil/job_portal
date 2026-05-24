@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply m-0 p-0 bg-slate-50 text-slate-900 antialiased font-sans selection:bg-emerald-700 selection:text-white;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Premium Glassmorphic Identity Panel Rules */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* High-Fidelity Interactive Cards */
+.pillar-card {
+  @apply bg-white border border-slate-200 rounded-3xl overflow-hidden flex flex-col justify-between transition-all duration-300 shadow-xs hover:-translate-y-2 hover:shadow-2xl hover:border-emerald-500/30 relative;
+}

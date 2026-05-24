@@ -1,0 +1,114 @@
+ap-youth-employment/
+│
+├── backend-api/                         # Unified Express.js Core (Isolated Matrix Routing)
+│   ├── src/
+│   │   ├── config/
+│   │   │   ├── db.js                    # MongoDB Connection Pooling
+│   │   │   └── security.js              # Cryptographic JWT verification profiles per portal
+│   │   ├── controllers/                 # Isolated domain logic (Zero cross-contamination)
+│   │   │   ├── seekerGatewayController.js
+│   │   │   ├── recruiterGatewayController.js
+│   │   │   ├── managementGatewayController.js
+│   │   │   └── developerGatewayController.js
+│   │   ├── middleware/                  # Dynamic Network & Token Isolation Barriers
+│   │   │   ├── seekerAuthBarrier.js     # Validates Seeker tokens only; rejects all others
+│   │   │   ├── recruiterAuthBarrier.js  # Validates Corporate tokens only; rejects all others
+│   │   │   ├── managementAuthBarrier.js # Validates Secretariat tokens only; restricts by Gov IP
+│   │   │   └── developerAuthBarrier.js  # Root level token verification + hardware keys
+│   │   ├── models/                      # Independent Collection Blueprints
+│   │   │   ├── SeekerRegistry.js        # Dedicated collection (Aadhaar/MeeSeva tokens, skills)
+│   │   │   ├── CorporateRegistry.js     # Dedicated collection (CIN numbers, job postings)
+│   │   │   ├── MatchingTransaction.js   # Middleman collection storing ANONYMOUS match pairs
+│   │   │   ├── TelemetryMetrics.js      # Global clickstream audit logs
+│   │   │   └── ServerUiConfig.js        # SDUI styling parameters mapping
+│   │   ├── routes/                      # Completely isolated interface pipelines
+│   │   │   ├── seekerGateway.js         # Exposed to Seeker Web UI only
+│   │   │   ├── recruiterGateway.js      # Exposed to Recruiter Web UI only
+│   │   │   ├── managementGateway.js     # Exposed to Secretariat WAN only
+│   │   │   └── developerGateway.js      # Exposed to private secure VPN network only
+│   │   └── server.js                    # Core entry point mapping independent domain pipelines
+│   ├── .env
+│   └── package.json
+│
+├── public-landing-website/              # PUBLIC ENTRY (Static Information Portal Only)
+│   ├── src/                             # Contains NO application code or portals
+│   │   ├── components/                  # Pure visual banners & links pointing to independent domains
+│   │   └── pages/Home.jsx               # (e.g., seeker.ap.gov.in, recruiter.ap.gov.in)
+│   ├── tailwind.config.js
+│   └── vite.config.js
+│
+├── job-seeker-portal/                   # APPLICANT ECOSYSTEM (Isolated Client App Bundle)
+│   ├── src/                             # Completely blind to corporate or admin panels
+│   │   ├── components/
+│   │   │   ├── SeekerLayout.jsx
+│   │   │   └── AnonymousJobCard.jsx 
+|   |   |    ── StatsWidget.jsx    # Renders jobs completely stripped of company names
+│   │   ├── pages/
+│   │   │   ├── SeekerLogin.jsx          # OTP authentication matching SeekerRegistry only
+│   │   │   ├── OnboardingVerification.jsx # MeeSeva, District, Sub-caste data schema entry
+│   │   │   └── PrivateFeed.jsx 
+|   |   |   ├── AppliedJobsRegistry.jsx 
+|   |   |    └── ProfileManagement.jsx        # AI matches shown as "Employer ID: AP-XXXX"
+│   │   └── services/seekerApi.js        # Hits ONLY /api/v1/seeker/*
+│   ├── tailwind.config.js
+│   └── vite.config.js
+│
+├── recruiter-portal/                    # EMPLOYER ECOSYSTEM (Isolated Client App Bundle)
+│   ├── src/                             # Completely blind to seeker profiles or admin panels
+│   │   ├── components/
+│   │   │   ├── CorporateLayout.jsx
+│   │   │   └── MaskedApplicantCard.jsx  # Displays candidates as anonymized skill profiles
+│   │   ├── pages/
+│   │   │   ├── RecruiterLogin.jsx       # Corporate OTP authentication
+│   │   │   ├── CorporateProfile.jsx     # CIN verification & Industry category configuration
+│   │   │   └── BlindTalentPool.jsx      # Sorts applicants by metrics, hiding identifying details
+│   │   └── services/recruiterApi.js     # Hits ONLY /api/v1/recruiter/*
+│   ├── tailwind.config.js
+│   └── vite.config.js
+│
+├── management-portal/                   # SECRETARIAT ANALYTICS (Isolated Client App Bundle)
+│   ├── src/                             # Aggregates macro stats; contains no operational code
+│   │   ├── components/
+│   │   │   └── AggregationChart.jsx
+│   │   ├── pages/
+│   │   │   ├── AdminSecureLogin.jsx     # Hardware token / State admin OTP interface
+│   │   │   ├── DistrictMacroFunnels.jsx # Macro pipeline throughput across 26 districts
+│   │   │   └── CasteDemographics.jsx    # Reservation compliance oversight analytics
+│   │   └── services/managementApi.js    # Hits ONLY /api/v1/management/*
+│   ├── tailwind.config.js
+│   └── vite.config.js
+│
+└── developer-portal/                    # PRODUCTION OPERATIONS PANEL (Isolated Client App Bundle)
+    ├── src/                             # Full administrative orchestration panel
+    │   ├── components/
+    │   │   └── ConfigurationEditor.jsx
+    │   ├── pages/
+    │   │   ├── DevSecureGate.jsx        # Multi-factor credential verification page
+    │   │   ├── DynamicThemeEngine.jsx   # Hot-swaps UI styles, text configurations, colors
+    │   │   └── TelemetryStream.jsx      # Live operational log display tracking platform traffic
+    │   └── services/developerApi.js     # Hits ONLY /api/v1/developer/*
+    ├── tailwind.config.js
+    └── vite.config.js
+
+
+
+
+
+
+
+
+
+                           ┌───────────────────────────┐
+                           │      MongoDB Atlas        │
+                           └─────────────▲─────────────┘
+                                         │
+                        ┌────────────────┴────────────────┐
+                        │ Express.js Monolithic Core API  │
+                        └────────────────▲────────────────┘
+                                         │
+        ┌───────────────────┬────────────┼────────────┬───────────────────┐
+        │                   │            │            │                   │
+┌───────┴───────┐   ┌───────┴───────┐┌───┴───┐   ┌────┴────-┐   ┌─────────┴─────────┐
+│  Landing Web  │   │  Job Seeker   ││Recruit│   │ Mgmt     │   │  Dev Orchestrator │
+│  (Public UI)  │   │   (MeeSeva)   ││(Corp) │   │ (AP State)│  │ (SDUI & Telemetry)│
+└───────────────┘   └───────────────┘└───────┘   └─────────-┘   └───────────────────┘
