@@ -1,5 +1,7 @@
-import { StrictMode, useEffect, useState } from 'react';
+// job-seeker-portal/src/main.jsx
+import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import SeekerLogin from './pages/SeekerLogin';
 import PrivateFeed from './pages/PrivateFeed';
 import OnboardingVerification from './pages/OnboardingVerification';
@@ -7,47 +9,76 @@ import AppliedJobsRegistry from './pages/AppliedJobsRegistry';
 import ProfileManagement from './pages/ProfileManagement';
 import './index.css';
 
-function SeekerAppRouter() {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+// Higher-Order Component to protect private applicant gateways
+function ProtectedRoute({ children }) {
   const secureToken = localStorage.getItem('seekerToken');
-
-  // Sync state changes with the browser address bar navigation history
-  useEffect(() => {
-    const handleLocationChange = () => setCurrentPath(window.location.pathname);
-    window.addEventListener('popstate', handleLocationChange);
-    return () => window.removeEventListener('popstate', handleLocationChange);
-  }, []);
-
-  const navigateTo = (path) => {
-    window.history.pushState({}, '', path);
-    setCurrentPath(path);
-  };
-
-  // Global Route Guard Perimeter Configuration
-  if (!secureToken && currentPath !== '/login') {
-    window.history.replaceState({}, '', '/login');
-    return <SeekerLogin onNavigate={navigateTo} />;
+  
+  if (!secureToken) {
+    // Redirects unauthenticated traffic straight to the login engine context cleanly
+    return <Navigate to="/login" replace />;
   }
+  
+  return children;
+}
 
-  switch (currentPath) {
-    case '/login':
-      return <SeekerLogin onNavigate={navigateTo} />;
-    case '/onboarding':
-      return <OnboardingVerification onNavigate={navigateTo} mode="onboard" />;
-    case '/edit-profile':
-      return <OnboardingVerification onNavigate={navigateTo} mode="edit" />;
-    case '/applied-jobs':
-      return <AppliedJobsRegistry onNavigate={navigateTo} />;
-    case '/profile':
-      return <ProfileManagement onNavigate={navigateTo} />;
-    case '/dashboard':
-    default:
-      return <PrivateFeed onNavigate={navigateTo} />;
-  }
+function SeekerAppRouter() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Public Infrastructure Gateways */}
+        <Route path="/login" element={<SeekerLogin />} />
+
+        {/* Private Protected Citizen Portals */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <PrivateFeed />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/onboarding" 
+          element={
+            <ProtectedRoute>
+              <OnboardingVerification mode="onboard" />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/edit-profile" 
+          element={
+            <ProtectedRoute>
+              <OnboardingVerification mode="edit" />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/applied-jobs" 
+          element={
+            <ProtectedRoute>
+              <AppliedJobsRegistry />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/profile" 
+          element={
+            <ProtectedRoute>
+              <ProfileManagement />
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* Catch-all Fallback Route Mapping */}
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  <React.StrictMode>
     <SeekerAppRouter />
-  </StrictMode>
+  </React.StrictMode>
 );
