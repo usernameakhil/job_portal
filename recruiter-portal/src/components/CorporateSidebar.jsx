@@ -1,22 +1,26 @@
+// recruiter-portal/src/components/CorporateSidebar.jsx
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom'; // Added core internal context routing components
 
 export default function CorporateSidebar({ children }) {
-  const currentPath = window.location.pathname;
+  const location = useLocation(); // Safely reads the path within the React Router engine
+  const currentPath = location.pathname;
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
+  // Mapped your routes to align with the paths declared in recruiter-portal/src/main.jsx
   const navItems = [
-    { label: 'Screening Pool', path: '/applicant-pool', icon: '' },
+    { label: 'Screening Pool', path: '/posted-jobs', icon: '' },
     { label: 'Post New Vacancy', path: '/post-job', icon: '' },
     { label: 'Corporate Profile', path: '/profile', icon: '' },
   ];
 
   const triggerSignOut = () => {
     localStorage.removeItem('recruiterToken');
-    window.location.href = '/login';
+    window.location.href = '/login'; // Hard refresh here is perfectly fine for unmounting session states
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans">
       {/* Mobile Header Node */}
       <div className="md:hidden bg-slate-900 text-white px-4 py-3 flex justify-between items-center border-b-2 border-emerald-500">
         <div className="flex items-center space-x-2">
@@ -40,15 +44,17 @@ export default function CorporateSidebar({ children }) {
               <p className="text-[10px] text-slate-500 font-mono mt-1 tracking-widest uppercase">Recruiter Module</p>
             </div>
           </div>
-          
         </div>
 
         <nav className="flex-grow p-4 space-y-1.5">
           {navItems.map((item, idx) => {
             const isActive = currentPath === item.path;
             return (
-              <a
-                key={idx} href={item.path}
+              /* Swapped out <a> for <Link> to manage smooth, zero-refresh SPA page changes */
+              <Link
+                key={idx} 
+                to={item.path}
+                onClick={() => setIsMobileOpen(false)} // Closes menu automatically on mobile view screens
                 className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold tracking-wide transition-all duration-150 ${
                   isActive 
                     ? 'bg-emerald-600 text-white shadow-lg font-bold' 
@@ -57,7 +63,7 @@ export default function CorporateSidebar({ children }) {
               >
                 <span className="text-lg leading-none">{item.icon}</span>
                 <span>{item.label}</span>
-              </a>
+              </Link>
             );
           })}
         </nav>
