@@ -1,8 +1,10 @@
 // recruiter-portal/src/pages/RecruiterLogin.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Integrated client-side routing
 import { recruiterApi } from '../services/recruiterApi';
 
 export default function RecruiterLogin() {
+  const navigate = useNavigate(); // Initialized the routing hook
   const [form, setForm] = useState({
     phone: '',
     name: '',
@@ -53,7 +55,9 @@ export default function RecruiterLogin() {
     try {
       const data = await recruiterApi.verifyOtp(form.phone, otp);
       localStorage.setItem('recruiterToken', data.token);
-      window.location.href = '/applicant-pool';
+      
+      // Fixed client-side route change preserves single page application context on Vercel
+      navigate('/applicant-pool');
     } catch (err) {
       setUiState({ 
         processing: false, 
@@ -66,12 +70,11 @@ export default function RecruiterLogin() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans">
       
-      {/* LEFT PORTION: 70% HIGH-FIDELITY STRUCTURAL VISUAL DATA MODULE */}
+      {/* LEFT PORTION: GRAPHICAL VISUAL DATA MODULE */}
       <div className="hidden md:flex md:w-[70%] bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-950 p-12 lg:p-16 flex-col justify-between relative overflow-hidden text-white border-r border-slate-800">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         
         <div className="space-y-4 z-10 relative">
-          
           <h1 className="text-4xl lg:text-5xl font-black tracking-tight max-w-2xl leading-tight">
             Job Provider Portal
           </h1>
@@ -79,12 +82,9 @@ export default function RecruiterLogin() {
             Enterprise verification access gate for approved recruiters. Publish active job mandates, query double-blind competency matrices, and track state-wide candidate deployments safely.
           </p>
         </div>
-
-        {/* Unified Operational Matrix Grid */}
-        
       </div>
 
-      {/* RIGHT PORTION: 30% REFINED AUTHENTICATION CONTROL CONSOLE */}
+      {/* RIGHT PORTION: REFINED AUTHENTICATION CONTROL CONSOLE */}
       <div className="w-full md:w-[30%] bg-white p-8 sm:p-10 flex flex-col justify-center border-t md:border-t-0 border-slate-200 shadow-2xl">
         <div className="space-y-6 max-w-sm w-full mx-auto">
           

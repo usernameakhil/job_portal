@@ -1,7 +1,9 @@
 // management-dashboard/src/pages/ManagementLogin.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Integrated client-side routing
 
 export default function ManagementLogin() {
+  const navigate = useNavigate(); // Initialized the routing hook
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
 
@@ -9,7 +11,9 @@ export default function ManagementLogin() {
     e.preventDefault();
     if (form.username === 'admin' && form.password === 'adminpass') {
       localStorage.setItem('adminAuthenticated', 'true');
-      window.location.href = '/dashboard';
+      
+      // Fixed client-side route change preserves single page application context on Vercel
+      navigate('/dashboard');
     } else {
       setError('Access Denied: Invalid Administrative Signature Credentials.');
     }
@@ -18,12 +22,11 @@ export default function ManagementLogin() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans">
       
-      {/* LEFT PORTION: 70% INFORMATION DISPLAY LAYER */}
+      {/* LEFT PORTION: INFORMATION DISPLAY LAYER */}
       <div className="hidden md:flex md:w-[70%] bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-950 p-12 lg:p-16 flex-col justify-between relative overflow-hidden text-white border-r border-slate-800">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         
         <div className="space-y-4 z-10 relative">
-          
           <h1 className="text-4xl lg:text-5xl font-black tracking-tight max-w-2xl leading-tight">
            Management Portal
           </h1>
@@ -31,11 +34,9 @@ export default function ManagementLogin() {
             Unified macro-analytics console aggregating cross-tenant regional employment data metrics, placement drives tracking, and statutory compliance indicators for Andhra Pradesh.
           </p>
         </div>
-
-        
       </div>
 
-      {/* RIGHT PORTION: 30% REFINED AUTHENTICATION CONTROL CONSOLE */}
+      {/* RIGHT PORTION: REFINED AUTHENTICATION CONTROL CONSOLE */}
       <div className="w-full md:w-[30%] bg-white p-8 sm:p-10 flex flex-col justify-center border-t md:border-t-0 border-slate-200 shadow-2xl">
         <div className="space-y-6 max-w-sm w-full mx-auto">
           

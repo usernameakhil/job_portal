@@ -1,7 +1,9 @@
 // job-seeker-portal/src/pages/SeekerLogin.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Added for client-side routing abstraction
 
 export default function SeekerLogin() {
+  const navigate = useNavigate(); // Initialized the clean navigation hook
   const [step, setStep] = useState(1); // 1 = Phone Entry, 2 = OTP Code Entry
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
@@ -43,12 +45,11 @@ export default function SeekerLogin() {
       // Persist active JWT security token indices
       localStorage.setItem('seekerToken', data.token);
 
-      // ⚡ REACTIVE ROUTING INTERCEPT GATE
-      // If the profile is complete, redirect to the dashboard; if not, force the configuration form layout
+      // Client-side React Router redirects fix the Vercel 404 page error completely
       if (data.isProfileComplete) {
-        window.location.href = '/dashboard';
+        navigate('/dashboard');
       } else {
-        window.location.href = '/profile';
+        navigate('/profile');
       }
     } catch (err) {
       setUiState({ processing: false, error: err.message, message: '' });
@@ -58,24 +59,21 @@ export default function SeekerLogin() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans">
       
-      {/* LEFT COLUMN: 70% GRAPHICAL GOVERNMENT VISUAL CONTENT PANEL */}
+      {/* LEFT COLUMN: GRAPHICAL GOVERNMENT VISUAL CONTENT PANEL */}
       <div className="hidden md:flex md:w-[70%] bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-950 p-12 lg:p-16 flex-col justify-between relative overflow-hidden text-white border-r border-slate-800">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
         
         <div className="space-y-3 z-10 relative">
-          
           <h1 className="text-4xl lg:text-5xl font-black tracking-tight max-w-3xl leading-tight">
-            Job seeker Portal
+            Job Seeker Portal
           </h1>
           <p className="text-slate-400 font-medium text-sm lg:text-base max-w-xl">
              Government of Andhra Pradesh. Decentralized, double-blind employment matching registers for citizen advancement.
           </p>
         </div>
-
-      
       </div>
 
-      {/* RIGHT COLUMN: 30% CRISP CLEAN LIGHT MODE AUTHORIZATION FORM */}
+      {/* RIGHT COLUMN: CRISP CLEAN LIGHT MODE AUTHORIZATION FORM */}
       <div className="w-full md:w-[30%] bg-white p-8 sm:p-10 flex flex-col justify-center border-t md:border-t-0 border-slate-200">
         <div className="space-y-6 max-w-sm w-full mx-auto">
           
