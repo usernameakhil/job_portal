@@ -1,6 +1,7 @@
 // recruiter-portal/src/main.jsx
-import { StrictMode, useEffect, useState } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import RecruiterLogin from './pages/RecruiterLogin';
 import CorporateProfile from './pages/CorporateProfile';
 import PostJobWizard from './pages/PostJobWizard';
@@ -8,42 +9,68 @@ import PostedJobsRegistry from './pages/PostedJobsRegistry';
 import JobAnalyticsDashboard from './pages/JobAnalyticsDashboard';
 import './index.css';
 
+// Higher-Order Security Guard for Recruiter Boundaries
+function ProtectedRecruiterRoute({ children }) {
+  const secureToken = localStorage.getItem('recruiterToken');
+  
+  if (!secureToken) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
 function RecruiterAppRouter() {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
-  const token = localStorage.getItem('recruiterToken');
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Public Authorization Entrypoint */}
+        <Route path="/login" element={<RecruiterLogin />} />
 
-  useEffect(() => {
-    const handlePopState = () => setCurrentPath(window.location.pathname);
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+        {/* Private Protected Corporate Workspace Modules */}
+        <Route 
+          path="/profile" 
+          element={
+            <ProtectedRecruiterRoute>
+              <CorporateProfile />
+            </ProtectedRecruiterRoute>
+          } 
+        />
+        <Route 
+          path="/post-job" 
+          element={
+            <ProtectedRecruiterRoute>
+              <PostJobWizard />
+            </ProtectedRecruiterRoute>
+          } 
+        />
+        <Route 
+          path="/posted-jobs" 
+          element={
+            <ProtectedRecruiterRoute>
+              <PostedJobsRegistry />
+            </ProtectedRecruiterRoute>
+          } 
+        />
+        
+        {/* Parametric addressing interception logic mapped using router wildcards */}
+        <Route 
+          path="/jobs/:jobId/analytics" 
+          element={
+            <ProtectedRecruiterRoute>
+              <JobAnalyticsDashboard />
+            </ProtectedRecruiterRoute>
+          } 
+        />
 
-  const navigateTo = (path) => {
-    window.history.pushState({}, '', path);
-    setCurrentPath(path);
-  };
-
-  if (!token && currentPath !== '/login') {
-    window.history.replaceState({}, '', '/login');
-    return <RecruiterLogin />;
-  }
-
-  // Parameterized Address Interception Matrix Logic
-  if (currentPath.includes('/jobs/') && currentPath.includes('/analytics')) {
-    return <JobAnalyticsDashboard onNavigate={navigateTo} />;
-  }
-
-  switch (currentPath) {
-    case '/login': return <RecruiterLogin />;
-    case '/profile': return <CorporateProfile onNavigate={navigateTo} />;
-    case '/post-job': return <PostJobWizard onNavigate={navigateTo} />;
-    case '/posted-jobs': return <PostedJobsRegistry onNavigate={navigateTo} />;
-    default: return <PostedJobsRegistry onNavigate={navigateTo} />;
-  }
+        {/* Fallback Catch-All Navigation Loop */}
+        <Route path="*" element={<Navigate to="/posted-jobs" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  <React.StrictMode>
     <RecruiterAppRouter />
-  </StrictMode>
+  </React.StrictMode>
 );

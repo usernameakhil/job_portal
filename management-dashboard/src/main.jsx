@@ -1,48 +1,67 @@
 // management-dashboard/src/main.jsx
-import { StrictMode, useEffect, useState } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ManagementLogin from './pages/ManagementLogin';
 import MacroInsightsHub from './pages/MacroInsightsHub';
 import VacancyAnalysisMatrix from './pages/VacancyAnalysisMatrix';
 import TargetJobMetrics from './pages/TargetJobMetrics';
 import './index.css';
 
-function ManagementPortalAppRouter() {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+// Route security gate: Enforce administrative login checks
+function ProtectedAdminRoute({ children }) {
   const isAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
-
-  useEffect(() => {
-    const handlePopState = () => setCurrentPath(window.location.pathname);
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  const navigateTo = (path) => {
-    window.history.pushState({}, '', path);
-    setCurrentPath(path);
-  };
-
-  // Route security gate: Enforce administrative login checks
-  if (!isAuthenticated && currentPath !== '/login') {
-    window.history.replaceState({}, '', '/login');
-    return <ManagementLogin />;
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
   }
+  return children;
+}
 
-  // Parameterized router matching for nested vacancy analytics
-  if (currentPath.startsWith('/vacancies/')) {
-    return <TargetJobMetrics onNavigate={navigateTo} />;
-  }
+function ManagementPortalAppRouter() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Public Authorization Entrypoint */}
+        <Route path="/login" element={<ManagementLogin />} />
 
-  switch (currentPath) {
-    case '/login': return <ManagementLogin />;
-    case '/vacancies': return <VacancyAnalysisMatrix onNavigate={navigateTo} />;
-    case '/dashboard':
-    default: return <MacroInsightsHub onNavigate={navigateTo} />;
-  }
+        {/* Private Protected Administration Gateways */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedAdminRoute>
+              <MacroInsightsHub />
+            </ProtectedAdminRoute>
+          } 
+        />
+        <Route 
+          path="/vacancies" 
+          element={
+            <ProtectedAdminRoute>
+              <VacancyAnalysisMatrix />
+            </ProtectedAdminRoute>
+          } 
+        />
+        
+        {/* Clean parameterized routing matches target metrics seamlessly */}
+        <Route 
+          path="/vacancies/:jobId" 
+          element={
+            <ProtectedAdminRoute>
+              <TargetJobMetrics />
+            </ProtectedAdminRoute>
+          } 
+        />
+
+        {/* Fallback Catch-All Strategy */}
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  <React.StrictMode>
     <ManagementPortalAppRouter />
-  </StrictMode>
+  </React.StrictMode>
 );
