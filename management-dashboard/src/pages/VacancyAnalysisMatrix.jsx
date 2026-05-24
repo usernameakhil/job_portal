@@ -1,8 +1,10 @@
 // management-dashboard/src/pages/VacancyAnalysisMatrix.jsx
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Added core routing hook
 import ManagementSidebar from '../components/ManagementSidebar';
 
-export default function VacancyAnalysisMatrix({ onNavigate }) {
+export default function VacancyAnalysisMatrix() {
+  const navigate = useNavigate(); // Initialized the clean navigation framework
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +18,7 @@ export default function VacancyAnalysisMatrix({ onNavigate }) {
   }, []);
 
   return (
-    <ManagementSidebar onNavigate={onNavigate}>
+    <ManagementSidebar>
       <div className="space-y-6 font-sans">
         
         {/* TOP HEADER CONTROLS CARD */}
@@ -36,7 +38,7 @@ export default function VacancyAnalysisMatrix({ onNavigate }) {
             No open vacancies have been published across any corporation tenant.
           </div>
         ) : (
-          /* LIVE DATA LEDGER GRID GRID */
+          /* LIVE DATA LEDGER GRID */
           <div className="grid grid-cols-1 gap-4">
             {jobs.map(j => (
               <div 
@@ -64,10 +66,10 @@ export default function VacancyAnalysisMatrix({ onNavigate }) {
                   
                   {/* AUDIT TRIGGER CONTROL BUTTON */}
                   <button 
-                    onClick={() => onNavigate(`/vacancies/${j._id}`)} 
+                    onClick={() => navigate(`/vacancies/${j._id}`)} // Replaced onNavigate with hook execution
                     className="px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-xs"
                   >
-                    Audit Demographics →
+                    Audit Demographics
                   </button>
                 </div>
               </div>
