@@ -7,22 +7,24 @@ const connectDatabasePool = require('./config/db');
 const app = express();
 app.use(express.json());
 
-// ⚡ REPAIRED PERIMETER MATRIX WITH MANAGEMENT ORIGINS WHITELISTED
+// Dynamic Global Access Perimeter Configuration
 app.use(cors({
-  origin: [
-    'http://localhost:5173',   // Job Seeker Web Portal Node
-    'http://127.0.0.1:5173',
-    'http://localhost:5174',   // Recruiter Enterprise Web Portal Node
-    'http://127.0.0.1:5174',
-    'http://localhost:5176',   // Management Command Console Node (Added Hostname String)
-    'http://127.0.0.1:5176'    // Management Command Console Node (IP Variant)
-  ],
+  origin: (origin, callback) => {
+    // Allows internal server-to-server calls, Postman, or local scripts (where origin is undefined)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    // Automatically mirrors the incoming domain back to the browser to authorize the transaction
+    return callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-dev-hardware-checksum'],
-  credentials: true
+  credentials: true,
+  optionsSuccessStatus: 200 // Resolves browser OPTIONS preflight challenges instantly
 }));
 
-// Bind route channels to separate gateways
+// Bind route channels to separate infrastructure network gateways
 app.use('/api/v1/seeker', require('./routes/seekerGateway'));
 app.use('/api/v1/recruiter', require('./routes/recruiterGateway'));
 app.use('/api/v1/management', require('./routes/analyticsGateway'));
