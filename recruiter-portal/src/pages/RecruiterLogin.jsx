@@ -134,7 +134,7 @@ export default function RecruiterLogin() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-black tracking-wider text-slate-700">Mobile Communications Link</label>
+                <label className="block text-[10px] uppercase font-black tracking-wider text-slate-700">Mobile number</label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-2.5 text-slate-400 font-bold text-sm">+91</span>
                   <input

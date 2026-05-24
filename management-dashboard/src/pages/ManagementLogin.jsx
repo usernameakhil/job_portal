@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Integrated client-side routing
 
 export default function ManagementLogin() {
-  const navigate = useNavigate(); // Initialized the routing hook
+  const navigate = useNavigate(); 
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
 

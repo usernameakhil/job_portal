@@ -1,13 +1,14 @@
+// recruiter-portal/src/pages/JobAnalyticsDashboard.jsx
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom'; // Replaced window location splits with native hooks
 import CorporateSidebar from '../components/CorporateSidebar';
 import DemographicChart from '../components/DemographicChart';
 import MaskedApplicantCard from '../components/MaskedApplicantCard';
 import { recruiterApi } from '../services/recruiterApi';
 
-export default function JobAnalyticsDashboard({ onNavigate }) {
-  // Extract jobId directly from the current address bar path matrix
-  const pathSegments = window.location.pathname.split('/');
-  const jobId = pathSegments[pathSegments.indexOf('jobs') + 1];
+export default function JobAnalyticsDashboard() {
+  const navigate = useNavigate();
+  const { jobId } = useParams(); // Automatically matches the :jobId variable from recruiter-portal/src/main.jsx route parameters
 
   const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,9 @@ export default function JobAnalyticsDashboard({ onNavigate }) {
   };
 
   useEffect(() => {
-    loadPipelineMetrics();
+    if (jobId) {
+      loadPipelineMetrics();
+    }
   }, [jobId]);
 
   const handleActionChange = async (txId, nextStatus) => {
@@ -53,7 +56,7 @@ export default function JobAnalyticsDashboard({ onNavigate }) {
     <CorporateSidebar>
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <button onClick={() => onNavigate('/posted-jobs')} className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-50">← Back</button>
+          <button onClick={() => navigate('/posted-jobs')} className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-50"><- Back</button>
           <div>
             <h1 className="text-2xl font-black text-slate-900 tracking-tight">Hiring Performance Analytics</h1>
             <p className="text-xs text-slate-500">Real-time aggregate distributions for Vacancy Vector Ref: <span className="font-mono bg-slate-100 px-1 rounded">{jobId}</span></p>
