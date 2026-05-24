@@ -124,7 +124,7 @@ function ApEmploymentPortal() {
                 <p className="text-xs text-slate-500 font-medium leading-relaxed">{t.seekerDesc}</p>
               </div>
               <button 
-                onClick={() => navigateToProductionTenant('https://job-portal-beta-gray.vercel.app/login')}
+                onClick={() => navigateToProductionTenant('https://job-portal-beta-gray.vercel.app')}
                 className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-md shadow-emerald-600/10"
               >
                 {t.seekerBtn}
@@ -143,7 +143,7 @@ function ApEmploymentPortal() {
                 <p className="text-xs text-slate-500 font-medium leading-relaxed">{t.recruiterDesc}</p>
               </div>
               <button 
-                onClick={() => navigateToProductionTenant('https://job-portal-js6x.vercel.app/login')}
+                onClick={() => navigateToProductionTenant('https://job-portal-js6x.vercel.app')}
                 className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-md shadow-slate-900/10"
               >
                 {t.recruiterBtn}
@@ -163,7 +163,7 @@ function ApEmploymentPortal() {
               </div>
               {/* Note: Update the placeholder string parameter below when your Management Vercel link is ready */}
               <button 
-                onClick={() => navigateToProductionTenant('https://job-portal-dfoj.vercel.app/login')}
+                onClick={() => navigateToProductionTenant('https://job-portal-dfoj.vercel.app')}
                 className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs uppercase tracking-widest rounded-xl transition-all shadow-md shadow-amber-500/10"
               >
                 {t.mgmtBtn}
