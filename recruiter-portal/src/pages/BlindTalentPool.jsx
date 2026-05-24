@@ -38,7 +38,7 @@ export default function BlindTalentPool() {
   const executePipelineAction = async (transactionId, newStatus) => {
     try {
       // Production integration call points to transactional update route
-      await fetch(`http://localhost:8080/api/v1/recruiter/applications/${transactionId}/status`, {
+      await fetch(`https://job-portal-backend-68x8.onrender.com/api/v1/recruiter/applications/${transactionId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

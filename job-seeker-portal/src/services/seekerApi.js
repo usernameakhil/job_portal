@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8080/api/v1/seeker';
+const BASE_URL = 'https://job-portal-backend-68x8.onrender.com';
 
 const fetchWithAuth = async (endpoint, options = {}) => {
   const token = localStorage.getItem('seekerToken');

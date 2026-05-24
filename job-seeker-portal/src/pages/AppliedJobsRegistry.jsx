@@ -11,7 +11,7 @@ export default function AppliedJobsRegistry({ onNavigate }) {
     try {
       setUi(prev => ({ ...prev, loading: true, error: '' }));
       
-      const response = await fetch('http://localhost:8080/api/v1/seeker/jobs/applied-history', {
+      const response = await fetch('https://job-portal-backend-68x8.onrender.com/api/v1/seeker/jobs/applied-history', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('seekerToken')}`,

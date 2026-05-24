@@ -20,7 +20,7 @@ export default function PrivateFeed({ onNavigate }) {
       const authToken = localStorage.getItem('seekerToken');
 
       // 📡 Request Stage 1: Pull active trainee profile information
-      const profileResponse = await fetch('http://localhost:8080/api/v1/seeker/profile/me', {
+      const profileResponse = await fetch('https://job-portal-backend-68x8.onrender.com/api/v1/seeker/profile/me', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${authToken}`,
@@ -38,7 +38,7 @@ export default function PrivateFeed({ onNavigate }) {
 
       if (isConfigured) {
         // 📡 Request Stage 2: Pull real-time anonymized vector match listings
-        const feedResponse = await fetch('http://localhost:8080/api/v1/seeker/jobs/anonymous-feed', {
+        const feedResponse = await fetch('https://job-portal-backend-68x8.onrender.com/api/v1/seeker/jobs/anonymous-feed', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${authToken}`,
@@ -70,7 +70,7 @@ export default function PrivateFeed({ onNavigate }) {
 
   const handleApplyTransaction = async (jobId) => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/seeker/applications/apply', {
+      const response = await fetch('https://job-portal-backend-68x8.onrender.com/api/v1/seeker/applications/apply', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('seekerToken')}`,

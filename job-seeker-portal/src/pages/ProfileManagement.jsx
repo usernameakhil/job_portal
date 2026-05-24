@@ -35,7 +35,7 @@ export default function ProfileManagement({ onNavigate }) {
   const fetchProfileData = async () => {
     try {
       setUiState(prev => ({ ...prev, loading: true, error: '' }));
-      const response = await fetch('http://localhost:8080/api/v1/seeker/profile/me', {
+      const response = await fetch('https://job-portal-backend-68x8.onrender.com/api/v1/seeker/profile/me', {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('seekerToken')}` }
       });
       const data = await response.json();
@@ -78,7 +78,7 @@ export default function ProfileManagement({ onNavigate }) {
     setUiState(prev => ({ ...prev, error: '', message: '', loading: true }));
 
     try {
-      const response = await fetch('http://localhost:8080/api/v1/seeker/profile/update', {
+      const response = await fetch('https://job-portal-backend-68x8.onrender.com/api/v1/seeker/profile/update', {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('seekerToken')}`,

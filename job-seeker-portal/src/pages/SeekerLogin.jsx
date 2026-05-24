@@ -12,7 +12,7 @@ export default function SeekerLogin() {
     setUiState({ processing: true, error: '', message: '' });
     
     try {
-      const response = await fetch('http://localhost:8080/api/v1/seeker/auth/request-otp', {
+      const response = await fetch('https://job-portal-backend-68x8.onrender.com/api/v1/seeker/auth/request-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phoneNumber: phone })
@@ -32,7 +32,7 @@ export default function SeekerLogin() {
     setUiState({ processing: true, error: '', message: '' });
 
     try {
-      const response = await fetch('http://localhost:8080/api/v1/seeker/auth/verify-otp', {
+      const response = await fetch('https://job-portal-backend-68x8.onrender.com/api/v1/seeker/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phoneNumber: phone, submittedOtp: otp })

@@ -8,7 +8,7 @@ export default function VacancyAnalysisMatrix({ onNavigate }) {
 
   useEffect(() => {
     // Hits the open management cross-tenant data compiler endpoint
-    fetch('http://localhost:8080/api/v1/management/all-vacancies')
+    fetch('https://job-portal-backend-68x8.onrender.com/api/v1/management/all-vacancies')
       .then(res => res.json())
       .then(res => setJobs(res.jobs || []))
       .catch(err => console.error('Error compiling vacancy registry array:', err))

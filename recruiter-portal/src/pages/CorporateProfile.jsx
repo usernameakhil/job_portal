@@ -34,7 +34,7 @@ export default function CorporateProfile() {
   const fetchCorporateProfile = async () => {
     try {
       setUi(prev => ({ ...prev, loading: true, error: '' }));
-      const response = await fetch('http://localhost:8080/api/v1/recruiter/profile/me', {
+      const response = await fetch('https://job-portal-backend-68x8.onrender.com/api/v1/recruiter/profile/me', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('recruiterToken')}`,
@@ -78,7 +78,7 @@ export default function CorporateProfile() {
     setUi(prev => ({ ...prev, loading: true, error: '', message: '' }));
 
     try {
-      const response = await fetch('http://localhost:8080/api/v1/recruiter/profile/update', {
+      const response = await fetch('https://job-portal-backend-68x8.onrender.com/api/v1/recruiter/profile/update', {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('recruiterToken')}`,

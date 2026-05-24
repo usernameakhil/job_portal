@@ -1,5 +1,5 @@
 // recruiter-portal/src/services/recruiterApi.js
-const BASE_URL = 'http://localhost:8080/api/v1/recruiter';
+const BASE_URL = 'https://job-portal-backend-68x8.onrender.com/api/v1/recruiter';
 
 const fetchWithAuth = async (endpoint, options = {}, requireAuth = true) => {
   const token = localStorage.getItem('recruiterToken');

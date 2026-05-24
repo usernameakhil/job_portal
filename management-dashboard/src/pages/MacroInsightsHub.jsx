@@ -24,8 +24,8 @@ export default function MacroInsightsHub({ onNavigate }) {
 
       // Execute concurrent data stream reads to eliminate rendering lag
       const [macroRes, regionalRes] = await Promise.all([
-        fetch('http://localhost:8080/api/v1/management/state-funnels/macro', requestOptions),
-        fetch('http://localhost:8080/api/v1/management/state-funnels/prakasam-mandals', requestOptions)
+        fetch('https://job-portal-backend-68x8.onrender.com/api/v1/management/state-funnels/macro', requestOptions),
+        fetch('https://job-portal-backend-68x8.onrender.com/api/v1/management/state-funnels/prakasam-mandals', requestOptions)
       ]);
 
       if (!macroRes.ok || !regionalRes.ok) {

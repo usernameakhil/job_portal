@@ -12,7 +12,7 @@ export default function TargetJobMetrics({ onNavigate }) {
 
   useEffect(() => {
     // Hits the direct corporate analytics engine cross-read endpoint bypass channel
-    fetch(`http://localhost:8080/api/v1/management/vacancies/${jobId}/demographics`)
+    fetch(`https://job-portal-backend-68x8.onrender.com/api/v1/management/vacancies/${jobId}/demographics`)
       .then(res => res.json())
       .then(res => {
         if (!res.success) throw new Error(res.error || 'Failed to query demographic matrices.');
